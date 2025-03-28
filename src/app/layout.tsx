@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { Toaster } from "react-hot-toast";
 
 // setting this here to bypass SSL certificate validation, consider mkcert for local development?
 // original error: [Error: self-signed certificate] { code: 'DEPTH_ZERO_SELF_SIGNED_CERT' }
@@ -29,13 +30,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Navbar />
-      <main className="mx-auto px-96">
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>
-          
-          <main>{children}</main>       
-        </body>
-      </main>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        
+        {/* //<main className="mx-auto px-96"> */}
+        <main className="w-[98%] sm:!w-[98%] md:!w-[98%] lg:!w-[80%] xl:!w-[80%] mx-auto">
+          <Navbar />
+          <Toaster position="top-right" reverseOrder={true}/>
+          {children}
+        </main>
+      </body>
     </html>
   );
 }

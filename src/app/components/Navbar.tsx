@@ -36,7 +36,8 @@ const products = [
 ]
 
 const admin = [
-  { name: 'Categories', description: 'Manage Categories', href: 'categories', icon: ChartPieIcon },
+  { name: 'Recipes', description: 'Manage Recipes', href: '/admin/add-recipe', icon: ChartPieIcon },
+  { name: 'Categories', description: 'Manage Categories', href: '/admin/categories', icon: ChartPieIcon },
   { name: 'Sub Categories', description: 'Manage Sub Categories', href: '#', icon: ChartPieIcon },
 ]
 
@@ -50,7 +51,7 @@ export default function Example() {
 
   return (
     <header className="bg-white">
-      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+      <nav aria-label="Global" className="mx-auto flex items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
@@ -124,7 +125,7 @@ export default function Example() {
             Nav link #3
           </a>
           <Popover className="relative">
-          <PopoverButton className="flex items-center gap-x-1 text-2xl/6 font-semibold text-gray-900">
+            <PopoverButton className="flex items-center gap-x-1 text-2xl/6 font-semibold text-gray-900">
               Admin
               <ChevronDownIcon aria-hidden="true" className="size-5 flex-none text-gray-400" />
             </PopoverButton>
@@ -248,4 +249,5 @@ export default function Example() {
         </DialogPanel>
       </Dialog>
     </header>
-  )}
+  )
+}

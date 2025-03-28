@@ -4,13 +4,9 @@
 import { useEffect } from "react";
 import { initFlowbite } from "flowbite";
 import { useState } from "react";
-import AdminDeleteModal from "../components/AdminDeleteModal";
-
-// Define the structure of a single category
-interface Category {
-    id: number; // Replace with the actual data type for 'id'
-    name: string; // Replace with the actual data type for 'name'
-}
+import AdminDeleteModal from "../../components/AdminDeleteModal";
+import AdminAddFormModal from "../../components/AdminAddFormModal";
+import { Category } from "../../../models/Category";
 
 // Define the prop structure for the CategoriesTable component
 interface CategoriesTableProps {
@@ -18,7 +14,10 @@ interface CategoriesTableProps {
 }
 
 const CategoriesTable = ({ categories }: CategoriesTableProps) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<"create" | "edit" | "delete" | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
     useEffect(() => {
         initFlowbite(); // Initialize Flowbite components
     }, []);
@@ -48,8 +47,15 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
                                 </th>
                                 <td className="px-6 py-4">{category.id}</td>
                                 <td className="px-6 py-4 text-right">
-                                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline pr-5">
-                                        Add
+                                    <a href="#" 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setSelectedCategory(category);
+                                            setModalType("create");
+                                            // setIsModalOpen(true);
+                                        }}
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline pr-5">
+                                        Create
                                     </a>
                                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline pr-5">
                                         Edit
@@ -58,8 +64,9 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
                                         href="#"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            console.log("Add clicked");
-                                            setIsModalOpen(true);
+                                            setSelectedCategory(category);
+                                            setModalType("delete");
+                                            // setIsModalOpen(true);
                                         }}
                                         className="font-medium text-red-600 dark:text-red-500 hover:underline pr-5"
                                     >
@@ -72,7 +79,21 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
                 </table>
             </div>
             {/* Ensure modal renders */}
-            {isModalOpen && <AdminDeleteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+            {/* {isModalOpen && selectedCategory && (
+                <AdminDeleteModal 
+                    isOpen={isModalOpen} 
+                    onClose={() => setIsModalOpen(false)}
+                    selectedCategory={selectedCategory} />
+                    )} */}
+
+{modalType === "create" && <AdminAddFormModal onClose={() => setModalType(null)} />}
+{/* {modalType === "edit" && selectedCategory && (
+    <AdminEditFormModal category={selectedCategory} onClose={() => setModalType(null)} />
+)}  */}
+{modalType === "delete" && selectedCategory && (
+    <AdminDeleteModal selectedCategory={selectedCategory} onClose={() => setModalType(null)} />
+)}
+
         </main>
     );
 };

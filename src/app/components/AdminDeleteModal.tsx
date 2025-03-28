@@ -1,10 +1,85 @@
+import { Category } from "@/models/Category";
+import { deleteCategory } from "../services/categoryService";
+import { toast } from "react-hot-toast";
+
 interface ModalProps {
-  isOpen: boolean;
+  //isOpen: boolean;
   onClose: () => void;
+  selectedCategory: Category | null;
 }
 
-export default function Modal({ isOpen, onClose }: ModalProps) {
-  if (!isOpen) return null; // Don't render if the modal is not open
+export default function Modal({ onClose, selectedCategory }: ModalProps) {
+  //if (!isOpen) return null; // Don't render if the modal is not open
+
+  const deleteCategoryHandler = async () => {
+    if (!selectedCategory?.id){
+      toast.error("Category not found, cannot delete.");
+      return;
+    }
+
+    const response = await deleteCategory(selectedCategory.id);
+    if (response?.success) {
+      console.log("Category deleted successfully");
+      toast.success("Category deleted successfully");
+      onClose();
+    }
+    else {
+      console.log("Error deleting category:");
+      //toast.error(`Error: ${response.error}`);
+    }
+  }
+//   const deleteCategoryHandler = async () => {
+//     if (!selectedCategory) return;
+
+//     const toastId = toast.loading("Deleting category...");
+//     console.log("inside delete handler");
+
+//     try {
+//       console.log("inside try just before calling servicve");
+//         await deleteCategory(7); // Error will propagate here if `throw` is used in the service
+//         toast.success("Category deleted successfully", { id: toastId });
+//         onClose(); // Close modal on success
+//     } catch (error) {
+//         console.error("Error in component:", error);
+//         const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+//         toast.error(`Error: ${errorMessage}`, { id: toastId });
+//     }
+// };
+//  const deleteCategoryHandler = async () => {
+//   if (!selectedCategory) return;
+
+//   const toastId = toast.loading("Deleting category...");
+
+//   try {
+//     const result = await deleteCategory(7);
+
+//     if (result.success) {
+//       toast.success("Category deleted successfully", { id: toastId });
+//       onClose(); // Close modal after success
+//     } else {
+//       toast.error(`Error: ${result.error}`, { id: toastId });
+//     }
+//   } catch (error) {
+//     console.error("Unexpected error:", error);
+//     toast.error("An unexpected error occurred", { id: toastId });
+//   }
+// };
+
+  // const deleteCategory = async () => {
+  //   try {
+  //     const response = await fetch(`https://localhost:44347/api/category/deletecategory/${selectedCategory?.id}`, {
+  //       method: "DELETE",
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}, message: ${response.statusText}`);
+  //     }
+  //     console.log('Category deleted successfully');
+  //     onClose();
+  //   } catch (error) {
+  //     console.error("Error deleting category:", error);
+  //   }
+  // }
 
   return (
     <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -25,14 +100,14 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
               <div className="mt-3">
                 <h3 className="text-base font-semibold text-gray-900" id="modal-title">Delete Category</h3>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">Are you sure you want to delete this category? This action cannot be undone.  **update this with the actual category name once delete functionality is in place**</p>
+                  <p className="text-sm text-gray-500">Are you sure you want to delete <strong>"{selectedCategory?.name}"</strong>. This action cannot be undone.</p>
                 </div>
               </div>
             </div>
           </div>
           {/* Modal Footer */}
           <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">
+            <button type="button" onClick={deleteCategoryHandler} className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">
               Delete
             </button>
             <button onClick={onClose} type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">
