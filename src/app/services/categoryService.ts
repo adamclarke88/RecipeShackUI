@@ -30,3 +30,21 @@ export async function deleteCategory(id: number) {
     console.log('test');
   }
 }
+
+export async function createCategory(name: string) {
+  try {
+    const response = await fetch("https://localhost:44347/api/category/createcategory", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+    revalidatePath("/categories");
+    return { success: response.ok };
+  }
+  catch (error) {
+    console.error("Error creating category:", error);
+    throw error;
+  }
+}
